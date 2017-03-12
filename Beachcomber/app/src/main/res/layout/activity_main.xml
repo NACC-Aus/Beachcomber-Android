@@ -1,0 +1,29 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+	android:background="@drawable/main_bg"
+	android:orientation="vertical"
+	>
+	
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/beachcomber_toc"
+        android:textColor="@color/nav_bar_text_color"
+        android:textStyle="bold"
+        android:textSize="22sp"
+        android:background="@drawable/nav_bar_bg" 
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        />
+
+    <ListView 
+        android:id="@+id/lvContent"
+        android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:background="@android:color/transparent"
+	    android:divider="@android:color/transparent"
+	    android:listSelector="@android:color/transparent"
+        />
+    
+</LinearLayout>
