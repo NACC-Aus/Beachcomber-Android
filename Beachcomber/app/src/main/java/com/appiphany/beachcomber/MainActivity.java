@@ -25,8 +25,13 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.appiphany.beachcomber.adapter.TocAdapter;
+import com.appiphany.beachcomber.models.TOC;
+import com.appiphany.beachcomber.models.TOCHeader;
 import com.appiphany.beachcomber.util.Config;
 import com.artifex.mupdf.MuPDFActivity;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class MainActivity extends Activity {
 
@@ -68,6 +73,16 @@ public class MainActivity extends Activity {
         if (!pdfFile.exists()) {
             copyAssetFileToSd();
         }
+
+        Realm realm = Realm.getInstance(GlobalApplication.getInstance().getRealmConfiguration());
+        RealmResults<TOC> results = realm.where(TOC.class).findAll();
+        List<TOCHeader> data = new ArrayList<>();
+        for (int i = 0; i < results.size(); i++) {
+            TOC item = results.get(i);
+            TOCHeader header = new TOCHeader();
+            header.setHeader(item.getHeader());
+        }
+        realm.close();
     }
 
     // use this method to write the PDF file to sdcard

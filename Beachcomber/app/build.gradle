@@ -10,6 +10,23 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
+    productFlavors {
+        beachcomber {
+            applicationId "com.appiphany.beachcomber"
+            versionCode 1
+            versionName "1.0.0"
+            buildConfigField "String", "DATA_PATH", "\"Beachcomber\""
+        }
+
+        coastalplants {
+            applicationId "com.appiphany.coastalplants"
+            versionCode 1
+            versionName "1.0.0"
+            buildConfigField "String", "DATA_PATH", "\"Coastal Plants\""
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -18,7 +35,10 @@ android {
     }
 }
 
+apply plugin: 'realm-android'
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:25.2.0'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
 }
