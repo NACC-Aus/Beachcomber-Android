@@ -1,31 +1,24 @@
 package com.appiphany.beachcomber.models;
 
+import io.realm.RealmResults;
+
 public class TOCHeader {
-    private String header;
-    private TOC toc;
+    private String name;
+    private RealmResults<TOC> tocList;
 
-    public String getHeader() {
-        return header;
+    public String getName() {
+        return name;
     }
 
-    public void setHeader(String header) {
-        this.header = header;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public TOC getToc() {
-        return toc;
+    public RealmResults<TOC> getTocList() {
+        return tocList;
     }
 
-    public void setToc(TOC toc) {
-        this.toc = toc;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if(obj instanceof TOCHeader){
-            TOCHeader other = (TOCHeader) obj;
-            return getHeader() != null && getHeader().equalsIgnoreCase(other.getHeader());
-        }
-        return false;
+    public void setTocList(RealmResults<TOC> tocList) {
+        this.tocList = tocList;
     }
 }

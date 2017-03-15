@@ -23,7 +23,7 @@ public class GlobalApplication extends Application{
         Realm.init(this);
         realmConfiguration = new RealmConfiguration.Builder()
                 .name(Realm.DEFAULT_REALM_NAME)
-                .assetFile(BuildConfig.DATA_PATH + Config.REALM_FILE)
+                .assetFile(Config.REALM_FILE)
                 .schemaVersion(1)
                 .migration(new RealmMigration() {
                     @Override

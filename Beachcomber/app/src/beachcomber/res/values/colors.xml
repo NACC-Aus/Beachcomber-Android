@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="header_bg">#A7CDE7</color>
+    <color name="item_bg">#61AACF</color>
+    <color name="header_text">#008CD4</color>
+</resources>

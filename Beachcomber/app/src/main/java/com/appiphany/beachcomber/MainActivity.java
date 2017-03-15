@@ -1,43 +1,27 @@
 package com.appiphany.beachcomber;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
-import android.content.Intent;
-import android.content.res.AssetManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.util.Log;
-import android.view.View;
+import android.support.v7.widget.RecyclerView;
 import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
-import android.widget.Toast;
 
-import com.appiphany.beachcomber.adapter.TocAdapter;
+import com.appiphany.beachcomber.adapter.TocItemAdapter;
 import com.appiphany.beachcomber.models.TOC;
 import com.appiphany.beachcomber.models.TOCHeader;
 import com.appiphany.beachcomber.util.Config;
-import com.artifex.mupdf.MuPDFActivity;
+
+import org.zakariya.stickyheaders.StickyHeaderLayoutManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import io.realm.Realm;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
 public class MainActivity extends Activity {
 
-    public final String mExtStoragePath = Environment.getExternalStorageDirectory().getPath();
-    private ListView mLvContent;
-    private TocAdapter mAdapter;
+    private Realm realm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,109 +29,34 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final List<String[]> listContent = parseCSVFile();
-        mLvContent = (ListView) findViewById(R.id.lvContent);
-        mAdapter = new TocAdapter(this, listContent);
-        mLvContent.setAdapter(mAdapter);
+        RecyclerView recycleView = (RecyclerView) findViewById(R.id.recycleView);
 
-        mLvContent.setOnItemClickListener(new OnItemClickListener() {
+        realm = Realm.getInstance(GlobalApplication.getInstance().getRealmConfiguration());
 
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                File file = new File(mExtStoragePath + "/" + Config.PDF_FILE_NAME);
-
-                Intent intent = new Intent(MainActivity.this, MuPDFActivity.class);
-                intent.setAction(Intent.ACTION_VIEW);
-                intent.setDataAndType(Uri.fromFile(file), "application/pdf");
-                intent.putExtra(Config.INDEX_PAGE, Integer.parseInt(listContent.get(position)[2]));
-
-                try {
-                    startActivity(intent);
-                } catch (ActivityNotFoundException e) {
-                    Toast.makeText(MainActivity.this, "NO Pdf Viewer", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        File pdfFile = new File(mExtStoragePath + "/" + Config.PDF_FILE_NAME);
-        if (!pdfFile.exists()) {
-            copyAssetFileToSd();
-        }
-
-        Realm realm = Realm.getInstance(GlobalApplication.getInstance().getRealmConfiguration());
-        RealmResults<TOC> results = realm.where(TOC.class).findAll();
         List<TOCHeader> data = new ArrayList<>();
-        for (int i = 0; i < results.size(); i++) {
-            TOC item = results.get(i);
-            TOCHeader header = new TOCHeader();
-            header.setHeader(item.getHeader());
-        }
-        realm.close();
-    }
-
-    // use this method to write the PDF file to sdcard
-    private void copyAssetFileToSd() {
-        AssetManager assetManager = getAssets();
-        String[] files = null;
-        try {
-            files = assetManager.list("");
-        } catch (IOException e) {
-            Log.e("tag", e.getMessage());
-        }
-
-        for (int i = 0; i < files.length; i++) {
-            String fStr = files[i];
-            if (fStr.equalsIgnoreCase(Config.PDF_FILE_NAME)) {
-                InputStream in = null;
-                OutputStream out = null;
-                try {
-                    in = assetManager.open(files[i]);
-                    out = new FileOutputStream(mExtStoragePath + "/" + files[i]);
-                    copyFile(in, out);
-                    in.close();
-                    in = null;
-                    out.flush();
-                    out.close();
-                    out = null;
-                    break;
-                } catch (Exception e) {
-                    Log.d("KienLT", "copy file to sdcard error: " + e.getMessage());
-                }
+        if(Config.IS_BEACHCOMBER) {
+            for (String header : Config.BEACHCOMBER_HEADERS) {
+                RealmQuery<TOC> query = realm.where(TOC.class);
+                query.equalTo("header", header);
+                RealmResults<TOC> realmResults = query.findAllSorted("startPageNumber");
+                TOCHeader headerItem = new TOCHeader();
+                headerItem.setName(header);
+                headerItem.setTocList(realmResults);
+                data.add(headerItem);
             }
         }
+
+        TocItemAdapter adapter = new TocItemAdapter(this, data);
+        recycleView.setAdapter(adapter);
+        recycleView.setLayoutManager(new StickyHeaderLayoutManager());
     }
 
-    private void copyFile(InputStream in, OutputStream out) throws IOException {
-        byte[] buffer = new byte[1024];
-        int read;
-        while ((read = in.read(buffer)) != -1) {
-            out.write(buffer, 0, read);
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(realm != null && !realm.isClosed()){
+            realm.close();
         }
-    }
-
-    private List<String[]> parseCSVFile() {
-        String next[] = {};
-        List<String[]> list = new ArrayList<String[]>();
-
-        try {
-            CSVReader reader = new CSVReader(new InputStreamReader(getAssets().open(Config.CSV_FILE_NAME)));
-            for (;;) {
-                next = reader.readNext();
-                if (next != null) {
-                    list.add(next);
-                } else {
-                    break;
-                }
-            }
-
-            list.remove(0);
-            list.add(0, new String[] { "Introduction", "", "1" });
-            return list;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return null;
     }
 
 }

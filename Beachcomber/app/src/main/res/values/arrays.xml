@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="beachcomber_headers">
+        <item>Introduction</item>
+        <item>Chordates - Animals with backbones</item>
+        <item>Introduction</item>
+        <item>Introduction</item>
+        <item>Introduction</item>
+        <item>Introduction</item>
+        <item>Introduction</item>
+    </string-array>
+
+    <string-array name="coastal_headers">
+
+    </string-array>
+</resources>
