@@ -14,6 +14,14 @@ public class TOC extends RealmObject {
     private String colour;
     private String header;
 
+    public TOC() {
+    }
+
+    public TOC(String pageName, String thumb) {
+        this.pageName = pageName;
+        this.thumb = thumb;
+    }
+
     public String getPageName() {
         return pageName;
     }

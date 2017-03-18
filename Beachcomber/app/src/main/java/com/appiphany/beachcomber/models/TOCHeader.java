@@ -1,24 +1,31 @@
 package com.appiphany.beachcomber.models;
 
-import io.realm.RealmResults;
+import java.util.ArrayList;
 
 public class TOCHeader {
-    private String name;
-    private RealmResults<TOC> tocList;
+    private String header;
+    private ArrayList<TOC> tocList = new ArrayList<>();
 
-    public String getName() {
-        return name;
+    public TOCHeader() {
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public TOCHeader(String header) {
+        this.header = header;
     }
 
-    public RealmResults<TOC> getTocList() {
+    public String getHeader() {
+        return header;
+    }
+
+    public void setHeader(String header) {
+        this.header = header;
+    }
+
+    public ArrayList<TOC> getTocList() {
         return tocList;
     }
 
-    public void setTocList(RealmResults<TOC> tocList) {
+    public void setTocList(ArrayList<TOC> tocList) {
         this.tocList = tocList;
     }
 }

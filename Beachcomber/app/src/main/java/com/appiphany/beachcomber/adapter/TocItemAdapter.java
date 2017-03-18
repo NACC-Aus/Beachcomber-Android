@@ -86,7 +86,7 @@ public class TocItemAdapter extends SectioningAdapter {
                 , R.color.header_bg));
         headerViewHolder.tvTitle.setTextColor(ContextCompat.getColor(headerViewHolder.tvTitle.getContext()
                 , R.color.header_text));
-        headerViewHolder.tvTitle.setText(getSection(sectionIndex).getName());
+        headerViewHolder.tvTitle.setText(getSection(sectionIndex).getHeader());
     }
 
     public TOCHeader getSection(int sectionIndex){
