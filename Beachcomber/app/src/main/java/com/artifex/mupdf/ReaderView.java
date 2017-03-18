@@ -56,6 +56,16 @@ public class ReaderView extends AdapterView<Adapter>
 	private int               mScrollerLastY;
 	private boolean           mScrollDisabled;
 
+	private long lastTouchDown;
+	private static final int CLICK_ACTION_THRESHHOLD = 100;
+
+	public interface OnSingleTapListener{
+		void onSingleTap(View v, MotionEvent event);
+	}
+
+	private OnSingleTapListener singleTapListener;
+
+
 	public ReaderView(Context context) {
 		super(context);
 		mGestureDetector = new GestureDetector(this);
@@ -75,6 +85,10 @@ public class ReaderView extends AdapterView<Adapter>
 		mGestureDetector = new GestureDetector(this);
 		mScaleGestureDetector = new ScaleGestureDetector(context, this);
 		mScroller        = new Scroller(context);
+	}
+
+	public void setOnSingleTapListener(OnSingleTapListener singleTapListener) {
+		this.singleTapListener = singleTapListener;
 	}
 
 	public int getDisplayedViewIndex() {
@@ -264,8 +278,15 @@ public class ReaderView extends AdapterView<Adapter>
 
 		if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
 			mUserInteracting = true;
+			lastTouchDown = System.currentTimeMillis();
 		}
 		if (event.getActionMasked() == MotionEvent.ACTION_UP) {
+			if (System.currentTimeMillis() - lastTouchDown < CLICK_ACTION_THRESHHOLD) {
+				if(singleTapListener != null){
+					singleTapListener.onSingleTap(this, event);
+				}
+			}
+
 			mScrollDisabled = false;
 			mUserInteracting = false;
 

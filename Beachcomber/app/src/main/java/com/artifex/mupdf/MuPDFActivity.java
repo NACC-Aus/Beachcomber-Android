@@ -1,25 +1,28 @@
 package com.artifex.mupdf;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.appiphany.beachcomber.BaseActivity;
 import com.appiphany.beachcomber.R;
 import com.appiphany.beachcomber.util.Config;
 
-public class MuPDFActivity extends Activity {
+public class MuPDFActivity extends BaseActivity implements ReaderView.OnSingleTapListener {
     private MuPDFCore core;
     private ReaderView mDocView;
     private AlertDialog.Builder mAlertBuilder;
+    private Toolbar toolbar;
+    private boolean isShowingToolbar;
 
     private int mPageIndex;
 
@@ -36,7 +39,9 @@ public class MuPDFActivity extends Activity {
         return core;
     }
 
-    /** Called when the activity is first created. */
+    /**
+     * Called when the activity is first created.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,12 +61,12 @@ public class MuPDFActivity extends Activity {
                         // Handle view requests from the Transformer Prime's file manager
                         // Hopefully other file managers will use this same scheme, if not
                         // using explicit paths.
-                        Cursor cursor = getContentResolver().query(uri, new String[] { "_data" }, null, null, null);
+                        Cursor cursor = getContentResolver().query(uri, new String[]{"_data"}, null, null, null);
                         if (cursor.moveToFirst()) {
                             uri = Uri.parse(cursor.getString(0));
                         }
                     }
-                    
+
                     core = openFile(Uri.decode(uri.getEncodedPath()));
                 }
 
@@ -88,6 +93,7 @@ public class MuPDFActivity extends Activity {
         createUI(savedInstanceState);
     }
 
+    @SuppressWarnings("ConstantConditions")
     public void createUI(Bundle savedInstanceState) {
         if (core == null)
             return;
@@ -119,10 +125,28 @@ public class MuPDFActivity extends Activity {
         mDocView.setDisplayedViewIndex(mPageIndex);
 
         // Stick the document view and the buttons overlay into a parent view
-        RelativeLayout layout = new RelativeLayout(this);
-        layout.addView(mDocView);
+        RelativeLayout layout = (RelativeLayout) View.inflate(this, R.layout.layout_pdf_viewer, null);
+        toolbar = (Toolbar) layout.findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        layout.addView(mDocView, 0);
         layout.setBackgroundResource(R.drawable.tiled_background);
         setContentView(layout);
+
+        mDocView.setOnSingleTapListener(this);
+        showHideToolbar(false);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -133,20 +157,34 @@ public class MuPDFActivity extends Activity {
     }
 
     @Override
-    public Object onRetainNonConfigurationInstance()
-    {
+    public Object onRetainCustomNonConfigurationInstance() {
         MuPDFCore mycore = core;
         core = null;
         return mycore;
     }
 
     @Override
-    public void onDestroy()
-    {
+    public void onDestroy() {
         if (core != null)
             core.onDestroy();
         core = null;
         super.onDestroy();
     }
 
+    @SuppressWarnings("ConstantConditions")
+    private void showHideToolbar(boolean isShow) {
+        isShowingToolbar = isShow;
+        if (isShow) {
+            getSupportActionBar().show();
+        } else {
+            getSupportActionBar().hide();
+        }
+
+    }
+
+    @Override
+    public void onSingleTap(View v, MotionEvent event) {
+        isShowingToolbar = !isShowingToolbar;
+        showHideToolbar(isShowingToolbar);
+    }
 }
