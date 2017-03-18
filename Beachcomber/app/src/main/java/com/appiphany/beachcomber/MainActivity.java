@@ -3,6 +3,7 @@ package com.appiphany.beachcomber;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.Window;
 
 import com.appiphany.beachcomber.adapter.TocItemAdapter;
@@ -19,15 +20,17 @@ import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
-public class MainActivity extends Activity {
+public class MainActivity extends BaseActivity {
 
     private Realm realm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         RecyclerView recycleView = (RecyclerView) findViewById(R.id.recycleView);
 

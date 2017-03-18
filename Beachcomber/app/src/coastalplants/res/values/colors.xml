@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="header_bg">#A7CDE7</color>
-    <color name="item_bg">#61AACF</color>
-    <color name="header_text">#008CD4</color>
+    <color name="header_bg">#8bbb71</color>
+    <color name="item_bg">#5f9647</color>
+    <color name="header_text">@android:color/white</color>
+
+    <color name="colorPrimary">#5f9647</color>
+    <color name="colorPrimaryDark">#5f9647</color>
+    <color name="colorAccent">@android:color/white</color>
 </resources>

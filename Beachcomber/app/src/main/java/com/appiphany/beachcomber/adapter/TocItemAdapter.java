@@ -1,7 +1,6 @@
 package com.appiphany.beachcomber.adapter;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,13 +20,9 @@ import java.util.List;
 
 public class TocItemAdapter extends SectioningAdapter {
     private List<TOCHeader> data;
-    private Typeface tf1;
-    private Typeface tf2;
 
     public TocItemAdapter(Context context, List<TOCHeader> data) {
         this.data = data;
-        tf1 = Typeface.createFromAsset(context.getAssets(), "fonts/BebasNeue.otf");
-        tf2 = Typeface.createFromAsset(context.getAssets(), "fonts/RobotoRegular.ttf");
     }
 
     @Override
@@ -54,18 +49,14 @@ public class TocItemAdapter extends SectioningAdapter {
     public ItemViewHolder onCreateItemViewHolder(ViewGroup parent, int itemType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View v = inflater.inflate(R.layout.item_layout, parent, false);
-        ItemViewHolder viewHolder =new ItemViewHolder(v);
-        viewHolder.tvTitle.setTypeface(tf2);
-        return viewHolder;
+        return new ItemViewHolder(v);
     }
 
     @Override
     public HeaderViewHolder onCreateHeaderViewHolder(ViewGroup parent, int headerType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View v = inflater.inflate(R.layout.header_layout, parent, false);
-        HeaderViewHolder viewHolder =new HeaderViewHolder(v);
-        viewHolder.tvTitle.setTypeface(tf1);
-        return viewHolder;
+        return new HeaderViewHolder(v);
     }
 
     @Override
