@@ -9,6 +9,8 @@ import com.appiphany.beachcomber.adapter.ITocClickedListener;
 import com.appiphany.beachcomber.adapter.TocItemAdapter;
 import com.appiphany.beachcomber.models.TOC;
 import com.appiphany.beachcomber.models.TOCHeader;
+import com.appiphany.beachcomber.util.Config;
+import com.appiphany.beachcomber.util.FileUtils;
 import com.artifex.mupdf.SafeAsyncTask;
 
 import org.zakariya.stickyheaders.StickyHeaderLayoutManager;
@@ -67,7 +69,8 @@ public class DetailActivity extends BaseActivity implements ITocClickedListener 
 
     @Override
     public void onItemClicked(TOCHeader header, TOC item) {
-
+        String pdfFilePath = FileUtils.getPath(Config.PDF_FILE_NAME);
+        FileUtils.viewPdf(this, pdfFilePath, (int)item.getStartPageNumber());
     }
 
     private static class LoadDataTask extends SafeAsyncTask<Void, Void, List<TOCHeader>> {
