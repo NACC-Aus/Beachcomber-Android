@@ -1,8 +1,10 @@
 package com.appiphany.beachcomber.models;
 
+import java.io.Serializable;
+
 import io.realm.RealmObject;
 
-public class TOC extends RealmObject {
+public class TOC extends RealmObject implements Serializable{
     private String pageName;
     private long startPageNumber;
     private long endPageNumber;

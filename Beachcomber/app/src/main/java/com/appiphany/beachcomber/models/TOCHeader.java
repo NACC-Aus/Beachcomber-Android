@@ -1,8 +1,9 @@
 package com.appiphany.beachcomber.models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class TOCHeader {
+public class TOCHeader implements Serializable{
     private String header;
     private ArrayList<TOC> tocList = new ArrayList<>();
 

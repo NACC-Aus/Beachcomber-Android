@@ -5,7 +5,8 @@ import java.util.concurrent.RejectedExecutionException;
 
 
 public abstract class SafeAsyncTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> {
-	public void safeExecute(Params... params) {
+	@SafeVarargs
+	public final void safeExecute(Params... params) {
 		try {
 			execute(params);
 		} catch(RejectedExecutionException e) {

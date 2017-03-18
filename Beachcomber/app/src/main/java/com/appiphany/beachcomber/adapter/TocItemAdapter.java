@@ -1,6 +1,5 @@
 package com.appiphany.beachcomber.adapter;
 
-import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,11 +17,14 @@ import org.zakariya.stickyheaders.SectioningAdapter;
 
 import java.util.List;
 
+@SuppressWarnings("WeakerAccess")
 public class TocItemAdapter extends SectioningAdapter {
     private List<TOCHeader> data;
+    private ITocClickedListener listener;
 
-    public TocItemAdapter(Context context, List<TOCHeader> data) {
+    public TocItemAdapter(List<TOCHeader> data, ITocClickedListener listener) {
         this.data = data;
+        this.listener = listener;
     }
 
     @Override
@@ -62,22 +64,42 @@ public class TocItemAdapter extends SectioningAdapter {
     @Override
     public void onBindItemViewHolder(SectioningAdapter.ItemViewHolder viewHolder, int sectionIndex, int itemIndex, int itemUserType) {
         ItemViewHolder itemViewHolder = (ItemViewHolder) viewHolder;
-        TOC item = getItem(sectionIndex, itemIndex);
+        final TOC item = getItem(sectionIndex, itemIndex);
+        final TOCHeader header = getSection(sectionIndex);
         itemViewHolder.tvTitle.setText(item.getPageName());
         itemViewHolder.tvTitle.setBackgroundColor(ContextCompat.getColor(itemViewHolder.tvTitle.getContext(),
                 R.color.item_bg));
         String imagePath = Config.THUMB_PATH + item.getThumb();
         Glide.with(itemViewHolder.imgThumb.getContext()).load(imagePath).into(itemViewHolder.imgThumb);
+
+        ((ItemViewHolder) viewHolder).itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(listener != null){
+                    listener.onItemClicked(header, item);
+                }
+            }
+        });
     }
 
     @Override
     public void onBindHeaderViewHolder(SectioningAdapter.HeaderViewHolder viewHolder, int sectionIndex, int headerUserType) {
         HeaderViewHolder headerViewHolder = (HeaderViewHolder) viewHolder;
+        final TOCHeader header = getSection(sectionIndex);
         headerViewHolder.tvTitle.setBackgroundColor(ContextCompat.getColor(headerViewHolder.tvTitle.getContext()
                 , R.color.header_bg));
         headerViewHolder.tvTitle.setTextColor(ContextCompat.getColor(headerViewHolder.tvTitle.getContext()
                 , R.color.header_text));
-        headerViewHolder.tvTitle.setText(getSection(sectionIndex).getHeader());
+        headerViewHolder.tvTitle.setText(header.getHeader());
+
+        ((HeaderViewHolder) viewHolder).itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(listener != null){
+                    listener.onHeaderClicked(header);
+                }
+            }
+        });
     }
 
     public TOCHeader getSection(int sectionIndex){
