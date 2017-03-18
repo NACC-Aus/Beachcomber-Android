@@ -435,7 +435,7 @@ public class ReaderView extends AdapterView<Adapter>
 
 	@Override
 	public View getSelectedView() {
-		throw new UnsupportedOperationException("Not supported");
+		return null;
 	}
 
 	@Override

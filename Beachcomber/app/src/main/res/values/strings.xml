@@ -12,6 +12,8 @@
     <string name="globefish">Globefish</string>
     <string name="weeping_toad_fish">Weeping toad fish</string>
     <string name="species">SPECIES</string>
+    <string name="dialog_title">Information</string>
+    <string name="msg_permission_required">Please accept permissions in order to use this app</string>
 
     <!--     for mupdf library -->
     <string name="no_media_warning">Storage Media not present</string>

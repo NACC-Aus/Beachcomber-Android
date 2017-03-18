@@ -19,6 +19,7 @@ public class GlobalApplication extends Application{
     public void onCreate() {
         super.onCreate();
         instance = this;
+        initFile();
 
         Realm.init(this);
         realmConfiguration = new RealmConfiguration.Builder()
@@ -84,6 +85,15 @@ public class GlobalApplication extends Application{
                  .build();
 
         Realm.setDefaultConfiguration(realmConfiguration);
+    }
+
+    private void initFile(){
+        if(Config.IS_BEACHCOMBER){
+            boolean tabletSize = getResources().getBoolean(R.bool.is_tablet);
+            Config.PDF_FILE_NAME = tabletSize? "Guide Tablet.pdf" : "Guide Phone.pdf";
+        }else{
+            Config.PDF_FILE_NAME = "Guide.pdf";
+        }
     }
 
     public static GlobalApplication getInstance() {

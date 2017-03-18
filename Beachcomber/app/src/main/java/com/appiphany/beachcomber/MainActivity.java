@@ -1,5 +1,6 @@
 package com.appiphany.beachcomber;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +11,7 @@ import com.appiphany.beachcomber.adapter.TocItemAdapter;
 import com.appiphany.beachcomber.models.TOC;
 import com.appiphany.beachcomber.models.TOCHeader;
 import com.appiphany.beachcomber.util.Config;
+import com.appiphany.beachcomber.util.FileUtils;
 import com.artifex.mupdf.SafeAsyncTask;
 
 import org.zakariya.stickyheaders.StickyHeaderLayoutManager;
@@ -39,6 +41,24 @@ public class MainActivity extends BaseActivity implements ITocClickedListener {
         recycleView.setLayoutManager(new StickyHeaderLayoutManager());
 
         new LoadDataTask(this).safeExecute();
+        initFile();
+    }
+
+    private void initFile(){
+        if(!verifyPermissionGranted(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE})){
+            checkForPermission(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE});
+            return;
+        }
+
+        String pdfPath = FileUtils.getPath(Config.PDF_FILE_NAME);
+        if(!FileUtils.isExist(pdfPath)){
+            FileUtils.copyFromAsset(this, Config.PDF_FILE_NAME);
+        }
+    }
+
+    @Override
+    protected void executeTaskAfterPermission(String[] permissions) {
+        initFile();
     }
 
     @Override
@@ -52,6 +72,9 @@ public class MainActivity extends BaseActivity implements ITocClickedListener {
             Intent intent = new Intent(this, DetailActivity.class);
             intent.putExtra(DetailActivity.CATEGORY, item);
             startActivity(intent);
+        }else{
+            String pdfFilePath = FileUtils.getPath(Config.PDF_FILE_NAME);
+            FileUtils.viewPdf(this, pdfFilePath, (int)item.getStartPageNumber());
         }
     }
 

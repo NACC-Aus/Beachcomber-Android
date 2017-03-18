@@ -6,4 +6,6 @@
 
     <dimen name="header_text">20sp</dimen>
     <dimen name="item_text">18sp</dimen>
+
+    <bool name="is_tablet">false</bool>
 </resources>
