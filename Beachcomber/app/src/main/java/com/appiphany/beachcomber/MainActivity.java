@@ -3,8 +3,10 @@ package com.appiphany.beachcomber;
 import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.appiphany.beachcomber.adapter.ITocClickedListener;
 import com.appiphany.beachcomber.adapter.TocItemAdapter;
@@ -24,7 +26,10 @@ import io.realm.Realm;
 
 public class MainActivity extends BaseActivity implements ITocClickedListener {
     private RecyclerView recycleView;
+    private View progressLoading;
     private TocItemAdapter adapter;
+    private Handler mainHandler = new Handler();
+
     @SuppressWarnings("ConstantConditions")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,28 +40,35 @@ public class MainActivity extends BaseActivity implements ITocClickedListener {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+        progressLoading = findViewById(R.id.progressLoading);
         recycleView = findViewById(R.id.recycleView);
         recycleView.setLayoutManager(new StickyHeaderLayoutManager());
 
+        new CopyFilesTask(this).safeExecute();
         new LoadDataTask(this).safeExecute();
-        initFile();
     }
 
-    private void initFile(){
-        if(!verifyPermissionGranted(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE})){
-            checkForPermission(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE});
+    private void initFile() {
+        if (!verifyPermissionGranted(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE})) {
+            mainHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    checkForPermission(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE});
+                }
+            });
+
             return;
         }
 
         String pdfPath = FileUtils.getPath(Config.PDF_FILE_NAME);
-        if(!FileUtils.isExist(pdfPath)){
+        if (!FileUtils.isExist(pdfPath)) {
             FileUtils.copyFromAsset(this, Config.PDF_FILE_NAME);
         }
     }
 
     @Override
     protected void executeTaskAfterPermission(String[] permissions) {
-        initFile();
+        new CopyFilesTask(this).safeExecute();
     }
 
     @Override
@@ -74,15 +86,16 @@ public class MainActivity extends BaseActivity implements ITocClickedListener {
             Intent intent = new Intent(this, DetailActivity.class);
             intent.putExtra(DetailActivity.CATEGORY, item);
             startActivity(intent);
-        }else{
+        } else {
             String pdfFilePath = FileUtils.getPath(Config.PDF_FILE_NAME);
-            FileUtils.viewPdf(this, pdfFilePath, (int)item.getStartPageNumber());
+            FileUtils.viewPdf(this, pdfFilePath, (int) item.getStartPageNumber());
         }
     }
 
     private void displayData(List<TOCHeader> data) {
         adapter = new TocItemAdapter(data, this);
         recycleView.setAdapter(adapter);
+        progressLoading.setVisibility(View.GONE);
     }
 
     private static class LoadDataTask extends SafeAsyncTask<Void, Void, List<TOCHeader>> {
@@ -105,6 +118,22 @@ public class MainActivity extends BaseActivity implements ITocClickedListener {
             if (weakReference.get() != null) {
                 weakReference.get().displayData(tocHeaders);
             }
+        }
+    }
+
+    private static class CopyFilesTask extends SafeAsyncTask<Void, Void, Void> {
+        private WeakReference<MainActivity> weakReference;
+
+        CopyFilesTask(MainActivity context) {
+            this.weakReference = new WeakReference<>(context);
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            if (weakReference.get() != null) {
+                weakReference.get().initFile();
+            }
+            return null;
         }
     }
 }
