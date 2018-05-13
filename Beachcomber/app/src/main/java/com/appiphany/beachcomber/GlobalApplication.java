@@ -1,6 +1,7 @@
 package com.appiphany.beachcomber;
 
 import android.app.Application;
+import android.support.annotation.NonNull;
 
 import com.appiphany.beachcomber.util.Config;
 
@@ -15,6 +16,7 @@ import io.realm.RealmMigration;
 import io.realm.RealmObjectSchema;
 import io.realm.RealmSchema;
 
+@SuppressWarnings("ConstantConditions")
 public class GlobalApplication extends Application {
     private static GlobalApplication instance;
     private RealmConfiguration realmConfiguration;
@@ -33,60 +35,15 @@ public class GlobalApplication extends Application {
         realmConfiguration = new RealmConfiguration.Builder()
                 .name(Realm.DEFAULT_REALM_NAME)
                 .assetFile(Config.REALM_FILE)
-                .schemaVersion(1)
+                .schemaVersion(2)
                 .migration(new RealmMigration() {
                     @Override
-                    public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
-                        if (oldVersion <= 1) {
-                            RealmSchema schema = realm.getSchema();
-                            RealmObjectSchema tocSchema = schema.get("TOC");
-                            if (tocSchema.hasField("pageName")) {
-                                tocSchema.setNullable("pageName", true);
-                            } else {
-                                tocSchema.addField("pageName", String.class);
-                            }
-
-                            if (tocSchema.hasField("thumb")) {
-                                tocSchema.setNullable("thumb", true);
-                            } else {
-                                tocSchema.addField("thumb", String.class);
-                            }
-
-                            if (tocSchema.hasField("type")) {
-                                tocSchema.setNullable("type", true);
-                            } else {
-                                tocSchema.addField("type", String.class);
-                            }
-
-                            if (tocSchema.hasField("growth")) {
-                                tocSchema.setNullable("growth", true);
-                            } else {
-                                tocSchema.addField("growth", String.class);
-                            }
-
-                            if (tocSchema.hasField("aboriginal")) {
-                                tocSchema.setNullable("aboriginal", true);
-                            } else {
-                                tocSchema.addField("aboriginal", String.class);
-                            }
-
-                            if (tocSchema.hasField("location")) {
-                                tocSchema.setNullable("location", true);
-                            } else {
-                                tocSchema.addField("location", String.class);
-                            }
-
-                            if (tocSchema.hasField("colour")) {
-                                tocSchema.setNullable("colour", true);
-                            } else {
-                                tocSchema.addField("colour", String.class);
-                            }
-
-                            if (tocSchema.hasField("header")) {
-                                tocSchema.setNullable("header", true);
-                            } else {
-                                tocSchema.addField("header", String.class);
-                            }
+                    public void migrate(@NonNull DynamicRealm realm, long oldVersion, long newVersion) {
+                        if (oldVersion < 1) {
+                            migrateFrom0(realm.getSchema());
+                            migrateFrom1(realm.getSchema());
+                        } else if (oldVersion < 2) {
+                            migrateFrom1(realm.getSchema());
                         }
                     }
                 })
@@ -95,6 +52,31 @@ public class GlobalApplication extends Application {
         Realm.setDefaultConfiguration(realmConfiguration);
     }
 
+    private void migrateFrom1(RealmSchema schema) {
+        RealmObjectSchema tocSchema = schema.get("TOC");
+        String[] fields = new String[] { "growthForm", "floweringTime", "flowerColour", "family"};
+        for (String field: fields) {
+            addStringNullableField(tocSchema, field);
+        }
+    }
+    private void migrateFrom0(RealmSchema schema) {
+        RealmObjectSchema tocSchema = schema.get("TOC");
+        String[] fields = new String[] { "pageName", "thumb", "type", "growth"
+                , "aboriginal", "location", "colour", "header"};
+        for (String field: fields) {
+            addStringNullableField(tocSchema, field);
+        }
+    }
+
+    private void addStringNullableField(RealmObjectSchema schema, String name){
+        if (schema.hasField(name)) {
+            if(!schema.isNullable(name)) {
+                schema.setNullable(name, true);
+            }
+        } else {
+            schema.addField(name, String.class);
+        }
+    }
     private void initFile() {
         if (Config.IS_BEACHCOMBER) {
             boolean tabletSize = getResources().getBoolean(R.bool.is_tablet);

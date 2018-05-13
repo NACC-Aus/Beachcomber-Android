@@ -3,7 +3,9 @@ package com.appiphany.beachcomber;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.appiphany.beachcomber.adapter.ITocClickedListener;
 import com.appiphany.beachcomber.adapter.TocItemAdapter;
@@ -41,6 +43,12 @@ public class DetailActivity extends BaseActivity implements ITocClickedListener 
 
         recycleView.setLayoutManager(new StickyHeaderLayoutManager());
         TOC toc = (TOC) getIntent().getSerializableExtra(CATEGORY);
+        setTitle(toc.getPageName());
+        TextView tvTitle = findViewById(R.id.tvTitle);
+        if(!TextUtils.isEmpty(toc.getPageName())) {
+            tvTitle.setText(toc.getPageName());
+        }
+
         new LoadDataTask(this, toc).safeExecute();
     }
 

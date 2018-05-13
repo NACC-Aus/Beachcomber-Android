@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import io.realm.RealmObject;
 
+@SuppressWarnings("unused")
 public class TOC extends RealmObject implements Serializable{
     private String pageName;
     private long startPageNumber;
@@ -15,6 +16,10 @@ public class TOC extends RealmObject implements Serializable{
     private String location;
     private String colour;
     private String header;
+    private String growthForm;
+    private String floweringTime;
+    private String flowerColour;
+    private String family;
 
     public TOC() {
     }
@@ -102,5 +107,37 @@ public class TOC extends RealmObject implements Serializable{
 
     public void setHeader(String header) {
         this.header = header;
+    }
+
+    public String getGrowthForm() {
+        return growthForm;
+    }
+
+    public void setGrowthForm(String growthForm) {
+        this.growthForm = growthForm;
+    }
+
+    public String getFloweringTime() {
+        return floweringTime;
+    }
+
+    public void setFloweringTime(String floweringTime) {
+        this.floweringTime = floweringTime;
+    }
+
+    public String getFlowerColour() {
+        return flowerColour;
+    }
+
+    public void setFlowerColour(String flowerColour) {
+        this.flowerColour = flowerColour;
+    }
+
+    public String getFamily() {
+        return family;
+    }
+
+    public void setFamily(String family) {
+        this.family = family;
     }
 }

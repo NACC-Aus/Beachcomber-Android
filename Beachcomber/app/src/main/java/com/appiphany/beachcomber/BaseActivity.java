@@ -1,5 +1,6 @@
 package com.appiphany.beachcomber;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
@@ -11,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.appiphany.beachcomber.util.GeneralUtils;
 
+@SuppressLint("Registered")
 public class BaseActivity extends AppCompatActivity {
     private static final int REQUEST_PERMISSIONS = 232;
 
