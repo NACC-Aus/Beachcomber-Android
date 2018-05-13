@@ -27,6 +27,7 @@ public class DetailActivity extends BaseActivity implements ITocClickedListener 
     public static final String CATEGORY = "CATEGORY";
 
     private RecyclerView recycleView;
+    private TocItemAdapter adapter;
 
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -53,7 +54,7 @@ public class DetailActivity extends BaseActivity implements ITocClickedListener 
     }
 
     public void displayData(List<TOCHeader> data) {
-        TocItemAdapter adapter = new TocItemAdapter(data, this);
+        adapter = new TocItemAdapter(data, this);
         recycleView.setAdapter(adapter);
     }
 
@@ -68,12 +69,15 @@ public class DetailActivity extends BaseActivity implements ITocClickedListener 
     }
 
     @Override
-    public void onHeaderClicked(TOCHeader header) {
+    public void onHeaderClicked(TOCHeader header, int sectionIndex) {
 
     }
 
     @Override
-    public void onItemClicked(TOCHeader header, TOC item) {
+    public void onItemClicked(TOCHeader header, TOC item, int sectionIndex, int itemIndex) {
+        adapter.setItemSelectedIndex(itemIndex);
+        adapter.setHeaderSelectedIndex(sectionIndex);
+        adapter.notifyDataSetChanged();
         String pdfFilePath = FileUtils.getPath(Config.PDF_FILE_NAME);
         FileUtils.viewPdf(this, pdfFilePath, (int)item.getStartPageNumber());
     }

@@ -24,7 +24,7 @@ import io.realm.Realm;
 
 public class MainActivity extends BaseActivity implements ITocClickedListener {
     private RecyclerView recycleView;
-
+    private TocItemAdapter adapter;
     @SuppressWarnings("ConstantConditions")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,12 +60,16 @@ public class MainActivity extends BaseActivity implements ITocClickedListener {
     }
 
     @Override
-    public void onHeaderClicked(TOCHeader header) {
+    public void onHeaderClicked(TOCHeader header, int sectionIndex) {
 
     }
 
     @Override
-    public void onItemClicked(TOCHeader header, TOC item) {
+    public void onItemClicked(TOCHeader header, TOC item, int sectionIndex, int itemIndex) {
+        adapter.setItemSelectedIndex(itemIndex);
+        adapter.setHeaderSelectedIndex(sectionIndex);
+        adapter.notifyDataSetChanged();
+
         if (!Config.IS_BEACHCOMBER) {
             Intent intent = new Intent(this, DetailActivity.class);
             intent.putExtra(DetailActivity.CATEGORY, item);
@@ -77,7 +81,7 @@ public class MainActivity extends BaseActivity implements ITocClickedListener {
     }
 
     private void displayData(List<TOCHeader> data) {
-        TocItemAdapter adapter = new TocItemAdapter(data, this);
+        adapter = new TocItemAdapter(data, this);
         recycleView.setAdapter(adapter);
     }
 

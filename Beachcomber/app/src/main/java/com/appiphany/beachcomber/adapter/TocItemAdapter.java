@@ -20,10 +20,30 @@ import java.util.List;
 public class TocItemAdapter extends SectioningAdapter {
     private List<TOCHeader> data;
     private ITocClickedListener listener;
+    private int itemSelectedIndex;
+    private int headerSelectedIndex;
 
     public TocItemAdapter(List<TOCHeader> data, ITocClickedListener listener) {
         this.data = data;
         this.listener = listener;
+         itemSelectedIndex = -1;
+         headerSelectedIndex = -1;
+    }
+
+    public int getItemSelectedIndex() {
+        return itemSelectedIndex;
+    }
+
+    public void setItemSelectedIndex(int itemSelectedIndex) {
+        this.itemSelectedIndex = itemSelectedIndex;
+    }
+
+    public int getHeaderSelectedIndex() {
+        return headerSelectedIndex;
+    }
+
+    public void setHeaderSelectedIndex(int headerSelectedIndex) {
+        this.headerSelectedIndex = headerSelectedIndex;
     }
 
     @Override
@@ -59,13 +79,12 @@ public class TocItemAdapter extends SectioningAdapter {
     }
 
     @Override
-    public void onBindItemViewHolder(SectioningAdapter.ItemViewHolder viewHolder, int sectionIndex, int itemIndex, int itemUserType) {
+    public void onBindItemViewHolder(SectioningAdapter.ItemViewHolder viewHolder, final int sectionIndex, final int itemIndex, int itemUserType) {
         ItemViewHolder itemViewHolder = (ItemViewHolder) viewHolder;
         final TOC item = getItem(sectionIndex, itemIndex);
         final TOCHeader header = getSection(sectionIndex);
         itemViewHolder.tvTitle.setText(item.getPageName());
-        itemViewHolder.tvTitle.setBackgroundColor(ContextCompat.getColor(itemViewHolder.tvTitle.getContext(),
-                R.color.item_bg));
+
         String imagePath = Config.THUMB_PATH + item.getThumb();
         Glide.with(itemViewHolder.imgThumb.getContext()).load(imagePath).into(itemViewHolder.imgThumb);
 
@@ -73,14 +92,22 @@ public class TocItemAdapter extends SectioningAdapter {
             @Override
             public void onClick(View v) {
                 if(listener != null){
-                    listener.onItemClicked(header, item);
+                    listener.onItemClicked(header, item, sectionIndex, itemIndex);
                 }
             }
         });
+
+        if(getItemSelectedIndex() == itemIndex && getHeaderSelectedIndex() == sectionIndex) {
+            itemViewHolder.tvTitle.setBackgroundColor(ContextCompat.getColor(itemViewHolder.tvTitle.getContext(),
+                    R.color.item_bg_selected));
+        } else {
+            itemViewHolder.tvTitle.setBackgroundColor(ContextCompat.getColor(itemViewHolder.tvTitle.getContext(),
+                    R.color.item_bg));
+        }
     }
 
     @Override
-    public void onBindHeaderViewHolder(SectioningAdapter.HeaderViewHolder viewHolder, int sectionIndex, int headerUserType) {
+    public void onBindHeaderViewHolder(SectioningAdapter.HeaderViewHolder viewHolder, final int sectionIndex, int headerUserType) {
         HeaderViewHolder headerViewHolder = (HeaderViewHolder) viewHolder;
         final TOCHeader header = getSection(sectionIndex);
         headerViewHolder.tvTitle.setBackgroundColor(ContextCompat.getColor(headerViewHolder.tvTitle.getContext()
@@ -93,7 +120,7 @@ public class TocItemAdapter extends SectioningAdapter {
             @Override
             public void onClick(View v) {
                 if(listener != null){
-                    listener.onHeaderClicked(header);
+                    listener.onHeaderClicked(header, sectionIndex);
                 }
             }
         });
