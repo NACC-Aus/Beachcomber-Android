@@ -1,7 +1,6 @@
 package com.appiphany.beachcomber.adapter;
 
 import android.support.v4.content.ContextCompat;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -49,15 +48,13 @@ public class TocItemAdapter extends SectioningAdapter {
 
     @Override
     public ItemViewHolder onCreateItemViewHolder(ViewGroup parent, int itemType) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View v = inflater.inflate(R.layout.item_layout, parent, false);
+        View v = View.inflate(parent.getContext(), R.layout.item_layout, null);
         return new ItemViewHolder(v);
     }
 
     @Override
     public HeaderViewHolder onCreateHeaderViewHolder(ViewGroup parent, int headerType) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View v = inflater.inflate(R.layout.header_layout, parent, false);
+        View v = View.inflate(parent.getContext(), R.layout.header_layout, null);
         return new HeaderViewHolder(v);
     }
 
@@ -115,8 +112,8 @@ public class TocItemAdapter extends SectioningAdapter {
         ImageView imgThumb;
         ItemViewHolder(View itemView) {
             super(itemView);
-            tvTitle = (TextView) itemView.findViewById(R.id.tvTitle);
-            imgThumb = (ImageView) itemView.findViewById(R.id.imgThumb);
+            tvTitle = itemView.findViewById(R.id.tvTitle);
+            imgThumb = itemView.findViewById(R.id.imgThumb);
         }
     }
 
@@ -124,7 +121,15 @@ public class TocItemAdapter extends SectioningAdapter {
         TextView tvTitle;
         HeaderViewHolder(View itemView) {
             super(itemView);
-            tvTitle = (TextView) itemView.findViewById(R.id.tvTitle);
+            tvTitle = itemView.findViewById(R.id.tvTitle);
         }
+    }
+
+    @Override
+    public GhostHeaderViewHolder onCreateGhostHeaderViewHolder(ViewGroup parent) {
+        final View ghostView = new View(parent.getContext());
+        ghostView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
+        return new GhostHeaderViewHolder(ghostView);
     }
 }

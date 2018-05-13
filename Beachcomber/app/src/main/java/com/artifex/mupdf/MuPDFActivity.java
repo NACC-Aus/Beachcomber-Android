@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import com.appiphany.beachcomber.BaseActivity;
 import com.appiphany.beachcomber.R;
 import com.appiphany.beachcomber.util.Config;
+import com.crashlytics.android.Crashlytics;
 
 public class MuPDFActivity extends BaseActivity implements ReaderView.OnSingleTapListener {
     private MuPDFCore core;
@@ -33,7 +34,7 @@ public class MuPDFActivity extends BaseActivity implements ReaderView.OnSingleTa
             // New file: drop the old outline data
 //            OutlineActivityData.set(null);
         } catch (Exception e) {
-            System.out.println(e);
+            Crashlytics.logException(e);
             return null;
         }
         return core;

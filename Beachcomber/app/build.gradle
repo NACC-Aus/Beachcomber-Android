@@ -1,12 +1,29 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        //noinspection GradleDynamicVersion
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
+
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "com.appiphany.beachcomber"
-        minSdkVersion 11
-        targetSdkVersion 25
+        minSdkVersion 14
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
 
@@ -15,17 +32,27 @@ android {
         }
     }
 
+    flavorDimensions "default"
     productFlavors {
         beachcomber {
             applicationId "com.appiphany.beachcomber"
             versionCode 2
             versionName "1.1.0"
+            dimension "default"
         }
 
         coastalplants {
             applicationId "com.appiphany.coastalplants"
             versionCode 1
             versionName "1.0.0"
+            dimension "default"
+        }
+
+        chapmanriver {
+            applicationId "com.appiphany.chapmanriver"
+            versionCode 1
+            versionName "1.0.0"
+            dimension "default"
         }
     }
 
@@ -54,18 +81,27 @@ android {
             res.srcDirs = ["src/coastalplants/res"]
             assets.srcDirs = ["src/coastalplants/assets"]
         }
+
+        chapmanriver {
+            res.srcDirs = ["src/chapmanriver/res"]
+            assets.srcDirs = ["src/chapmanriver/assets"]
+        }
     }
 }
 
 apply plugin: 'realm-android'
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:25.2.0'
-    compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile ('org.zakariya.stickyheaders:stickyheaders:0.7.6'){
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.github.bumptech.glide:glide:4.7.1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
+    implementation ('org.zakariya.stickyheaders:stickyheaders:0.7.6'){
         exclude group: 'com.android.support', module: 'recyclerview-v7'
     }
 
-    compile 'com.android.support:recyclerview-v7:25.2.0'
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
+    implementation('com.crashlytics.sdk.android:crashlytics:2.9.2@aar') {
+        transitive = true
+    }
 }

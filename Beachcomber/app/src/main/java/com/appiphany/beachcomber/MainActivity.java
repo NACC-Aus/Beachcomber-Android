@@ -33,11 +33,11 @@ public class MainActivity extends BaseActivity implements ITocClickedListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        recycleView = (RecyclerView) findViewById(R.id.recycleView);
+        recycleView = findViewById(R.id.recycleView);
         recycleView.setLayoutManager(new StickyHeaderLayoutManager());
 
         new LoadDataTask(this).safeExecute();
@@ -98,7 +98,7 @@ public class MainActivity extends BaseActivity implements ITocClickedListener {
                 for (String header : Config.BEACHCOMBER_HEADERS) {
                     RealmQuery<TOC> query = realm.where(TOC.class);
                     query.equalTo("header", header);
-                    RealmResults<TOC> realmResults = query.findAllSorted("startPageNumber");
+                    RealmResults<TOC> realmResults = query.sort("startPageNumber").findAll();
                     TOCHeader headerItem = new TOCHeader();
                     headerItem.setHeader(header);
                     List<TOC> items = new ArrayList<>(realmResults);

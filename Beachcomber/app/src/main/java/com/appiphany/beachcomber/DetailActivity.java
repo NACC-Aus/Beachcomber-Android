@@ -91,64 +91,64 @@ public class DetailActivity extends BaseActivity implements ITocClickedListener 
             switch (toc.getPageName()) {
                 default:
                 case "All":
-                    realmResults = query.findAllSorted("startPageNumber");
+                    realmResults = query.sort("startPageNumber").findAll();
                     break;
                 case "Native":
-                    realmResults = query.equalTo("type", "Native").findAllSorted("startPageNumber");
+                    realmResults = query.equalTo("type", "Native").sort("startPageNumber").findAll();
                     break;
                 case "Weed":
-                    realmResults = query.equalTo("type", "Weed").findAllSorted("startPageNumber");
+                    realmResults = query.equalTo("type", "Weed").sort("startPageNumber").findAll();
                     break;
                 case "Tree":
-                    realmResults = query.contains("growth", "tree", Case.INSENSITIVE).findAllSorted("startPageNumber");
+                    realmResults = query.contains("growth", "tree", Case.INSENSITIVE).sort("startPageNumber").findAll();
                     break;
                 case "Shrub":
-                    realmResults = query.contains("growth", "shrub", Case.INSENSITIVE).findAllSorted("startPageNumber");
+                    realmResults = query.contains("growth", "shrub", Case.INSENSITIVE).sort("startPageNumber").findAll();
                     break;
                 case "Ground Cover":
-                    realmResults = query.contains("growth", "ground cover", Case.INSENSITIVE).findAllSorted("startPageNumber");
+                    realmResults = query.contains("growth", "ground cover", Case.INSENSITIVE).sort("startPageNumber").findAll();
                     break;
                 case "Climber":
-                    realmResults = query.contains("growth", "climber", Case.INSENSITIVE).findAllSorted("startPageNumber");
+                    realmResults = query.contains("growth", "climber", Case.INSENSITIVE).sort("startPageNumber").findAll();
                     break;
                 case "Grass":
-                    realmResults = query.contains("growth", "grass", Case.INSENSITIVE).findAllSorted("startPageNumber");
+                    realmResults = query.contains("growth", "grass", Case.INSENSITIVE).sort("startPageNumber").findAll();
                     break;
                 case "Aboriginal Usage":
-                    realmResults = query.contains("aboriginal", "yes", Case.INSENSITIVE).findAllSorted("startPageNumber");
+                    realmResults = query.contains("aboriginal", "yes", Case.INSENSITIVE).sort("startPageNumber").findAll();
                     break;
                 case "Fore Dune":
-                    realmResults = query.contains("location", "fore dune", Case.INSENSITIVE).findAllSorted("startPageNumber");
+                    realmResults = query.contains("location", "fore dune", Case.INSENSITIVE).sort("startPageNumber").findAll();
                     break;
                 case "Mid Dune":
-                    realmResults = query.contains("location", "mid dune", Case.INSENSITIVE).findAllSorted("startPageNumber");
+                    realmResults = query.contains("location", "mid dune", Case.INSENSITIVE).sort("startPageNumber").findAll();
                     break;
                 case "Hind Dune":
-                    realmResults = query.contains("location", "hind dune", Case.INSENSITIVE).findAllSorted("startPageNumber");
+                    realmResults = query.contains("location", "hind dune", Case.INSENSITIVE).sort("startPageNumber").findAll();
                     break;
                 case "Limestone Cliffs":
-                    realmResults = query.contains("location", "limestone cliffs", Case.INSENSITIVE).findAllSorted("startPageNumber");
+                    realmResults = query.contains("location", "limestone cliffs", Case.INSENSITIVE).sort("startPageNumber").findAll();
                     break;
                 case "Yellow":
-                    realmResults = query.contains("colour", "yellow", Case.INSENSITIVE).findAllSorted("startPageNumber");
+                    realmResults = query.contains("colour", "yellow", Case.INSENSITIVE).sort("startPageNumber").findAll();
                     break;
                 case "White":
-                    realmResults = query.contains("colour", "white", Case.INSENSITIVE).findAllSorted("startPageNumber");
+                    realmResults = query.contains("colour", "white", Case.INSENSITIVE).sort("startPageNumber").findAll();
                     break;
                 case "Grey":
-                    realmResults = query.contains("colour", "grey", Case.INSENSITIVE).findAllSorted("startPageNumber");
+                    realmResults = query.contains("colour", "grey", Case.INSENSITIVE).sort("startPageNumber").findAll();
                     break;
                 case "Pink":
-                    realmResults = query.contains("colour", "pink", Case.INSENSITIVE).findAllSorted("startPageNumber");
+                    realmResults = query.contains("colour", "pink", Case.INSENSITIVE).sort("startPageNumber").findAll();
                     break;
                 case "Orange":
-                    realmResults = query.contains("colour", "orange", Case.INSENSITIVE).findAllSorted("startPageNumber");
+                    realmResults = query.contains("colour", "orange", Case.INSENSITIVE).sort("startPageNumber").findAll();
                     break;
                 case "Purple":
-                    realmResults = query.contains("colour", "purple", Case.INSENSITIVE).findAllSorted("startPageNumber");
+                    realmResults = query.contains("colour", "purple", Case.INSENSITIVE).sort("startPageNumber").findAll();
                     break;
                 case "Blue":
-                    realmResults = query.contains("colour", "blue", Case.INSENSITIVE).findAllSorted("startPageNumber");
+                    realmResults = query.contains("colour", "blue", Case.INSENSITIVE).sort("startPageNumber").findAll();
                     break;
             }
 
