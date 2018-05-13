@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.appiphany.beachcomber.adapter.ITocClickedListener;
@@ -28,6 +29,7 @@ public class DetailActivity extends BaseActivity implements ITocClickedListener 
 
     private RecyclerView recycleView;
     private TocItemAdapter adapter;
+    private View progressLoading;
 
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -40,6 +42,7 @@ public class DetailActivity extends BaseActivity implements ITocClickedListener 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+        progressLoading = findViewById(R.id.progressLoading);
         recycleView = findViewById(R.id.recycleView);
 
         recycleView.setLayoutManager(new StickyHeaderLayoutManager());
@@ -56,6 +59,7 @@ public class DetailActivity extends BaseActivity implements ITocClickedListener 
     public void displayData(List<TOCHeader> data) {
         adapter = new TocItemAdapter(data, this);
         recycleView.setAdapter(adapter);
+        progressLoading.setVisibility(View.GONE);
     }
 
     @Override

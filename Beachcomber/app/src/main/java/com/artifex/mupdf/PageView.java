@@ -155,7 +155,7 @@ public abstract class PageView extends ViewGroup {
         }
     }
 
-    public void setPage(int page, PointF size) {
+    public void setPage(int page, PointF size) throws Throwable{
         // Cancel pending render task
         if (mDrawEntire != null) {
             mDrawEntire.cancel(true);

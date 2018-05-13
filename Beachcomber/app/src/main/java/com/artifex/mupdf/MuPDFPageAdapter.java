@@ -1,5 +1,6 @@
 package com.artifex.mupdf;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Point;
 import android.graphics.PointF;
@@ -46,12 +47,16 @@ public class MuPDFPageAdapter extends BaseAdapter {
         if (pageSize != null) {
             // We already know the page size. Set it up
             // immediately
-            pageView.setPage(position, pageSize);
+            try {
+                pageView.setPage(position, pageSize);
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
         } else {
             // Page size as yet unknown. Blank it for now, and
             // start a background task to find the size
             pageView.blank(position);
-            SafeAsyncTask<Void, Void, PointF> sizingTask = new SafeAsyncTask<Void, Void, PointF>() {
+            @SuppressLint("StaticFieldLeak") SafeAsyncTask<Void, Void, PointF> sizingTask = new SafeAsyncTask<Void, Void, PointF>() {
                 @Override
                 protected PointF doInBackground(Void... arg0) {
                     return mCore.getPageSize(position);
@@ -64,8 +69,13 @@ public class MuPDFPageAdapter extends BaseAdapter {
                     mPageSizes.put(position, result);
                     // Check that this view hasn't been reused for
                     // another page since we started
-                    if (pageView.getPage() == position)
-                        pageView.setPage(position, result);
+                    if (pageView.getPage() == position) {
+                        try {
+                            pageView.setPage(position, result);
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
+                    }
                 }
             };
 
