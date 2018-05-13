@@ -75,16 +75,19 @@ android {
         beachcomber {
             res.srcDirs = ["src/beachcomber/res"]
             assets.srcDirs = ["src/beachcomber/assets"]
+            java.srcDirs = ["src/beachcomber/java"]
         }
 
         coastalplants {
             res.srcDirs = ["src/coastalplants/res"]
             assets.srcDirs = ["src/coastalplants/assets"]
+            java.srcDirs = ["src/coastalplants/java"]
         }
 
         chapmanriver {
             res.srcDirs = ["src/chapmanriver/res"]
             assets.srcDirs = ["src/chapmanriver/assets"]
+            java.srcDirs = ["src/chapmanriver/java"]
         }
     }
 }

@@ -7,6 +7,7 @@ import android.view.MenuItem;
 
 import com.appiphany.beachcomber.adapter.ITocClickedListener;
 import com.appiphany.beachcomber.adapter.TocItemAdapter;
+import com.appiphany.beachcomber.data.DataProvider;
 import com.appiphany.beachcomber.models.TOC;
 import com.appiphany.beachcomber.models.TOCHeader;
 import com.appiphany.beachcomber.util.Config;
@@ -16,13 +17,9 @@ import com.artifex.mupdf.SafeAsyncTask;
 import org.zakariya.stickyheaders.StickyHeaderLayoutManager;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.List;
 
-import io.realm.Case;
 import io.realm.Realm;
-import io.realm.RealmQuery;
-import io.realm.RealmResults;
 
 public class DetailActivity extends BaseActivity implements ITocClickedListener {
     public static final String CATEGORY = "CATEGORY";
@@ -35,12 +32,12 @@ public class DetailActivity extends BaseActivity implements ITocClickedListener 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        recycleView = (RecyclerView) findViewById(R.id.recycleView);
+        recycleView = findViewById(R.id.recycleView);
 
         recycleView.setLayoutManager(new StickyHeaderLayoutManager());
         TOC toc = (TOC) getIntent().getSerializableExtra(CATEGORY);
@@ -85,81 +82,7 @@ public class DetailActivity extends BaseActivity implements ITocClickedListener 
         @Override
         protected List<TOCHeader> doInBackground(Void... params) {
             Realm realm = Realm.getInstance(GlobalApplication.getInstance().getRealmConfiguration());
-            List<TOCHeader> data = new ArrayList<>();
-            RealmQuery<TOC> query = realm.where(TOC.class);
-            RealmResults<TOC> realmResults;
-            switch (toc.getPageName()) {
-                default:
-                case "All":
-                    realmResults = query.sort("startPageNumber").findAll();
-                    break;
-                case "Native":
-                    realmResults = query.equalTo("type", "Native").sort("startPageNumber").findAll();
-                    break;
-                case "Weed":
-                    realmResults = query.equalTo("type", "Weed").sort("startPageNumber").findAll();
-                    break;
-                case "Tree":
-                    realmResults = query.contains("growth", "tree", Case.INSENSITIVE).sort("startPageNumber").findAll();
-                    break;
-                case "Shrub":
-                    realmResults = query.contains("growth", "shrub", Case.INSENSITIVE).sort("startPageNumber").findAll();
-                    break;
-                case "Ground Cover":
-                    realmResults = query.contains("growth", "ground cover", Case.INSENSITIVE).sort("startPageNumber").findAll();
-                    break;
-                case "Climber":
-                    realmResults = query.contains("growth", "climber", Case.INSENSITIVE).sort("startPageNumber").findAll();
-                    break;
-                case "Grass":
-                    realmResults = query.contains("growth", "grass", Case.INSENSITIVE).sort("startPageNumber").findAll();
-                    break;
-                case "Aboriginal Usage":
-                    realmResults = query.contains("aboriginal", "yes", Case.INSENSITIVE).sort("startPageNumber").findAll();
-                    break;
-                case "Fore Dune":
-                    realmResults = query.contains("location", "fore dune", Case.INSENSITIVE).sort("startPageNumber").findAll();
-                    break;
-                case "Mid Dune":
-                    realmResults = query.contains("location", "mid dune", Case.INSENSITIVE).sort("startPageNumber").findAll();
-                    break;
-                case "Hind Dune":
-                    realmResults = query.contains("location", "hind dune", Case.INSENSITIVE).sort("startPageNumber").findAll();
-                    break;
-                case "Limestone Cliffs":
-                    realmResults = query.contains("location", "limestone cliffs", Case.INSENSITIVE).sort("startPageNumber").findAll();
-                    break;
-                case "Yellow":
-                    realmResults = query.contains("colour", "yellow", Case.INSENSITIVE).sort("startPageNumber").findAll();
-                    break;
-                case "White":
-                    realmResults = query.contains("colour", "white", Case.INSENSITIVE).sort("startPageNumber").findAll();
-                    break;
-                case "Grey":
-                    realmResults = query.contains("colour", "grey", Case.INSENSITIVE).sort("startPageNumber").findAll();
-                    break;
-                case "Pink":
-                    realmResults = query.contains("colour", "pink", Case.INSENSITIVE).sort("startPageNumber").findAll();
-                    break;
-                case "Orange":
-                    realmResults = query.contains("colour", "orange", Case.INSENSITIVE).sort("startPageNumber").findAll();
-                    break;
-                case "Purple":
-                    realmResults = query.contains("colour", "purple", Case.INSENSITIVE).sort("startPageNumber").findAll();
-                    break;
-                case "Blue":
-                    realmResults = query.contains("colour", "blue", Case.INSENSITIVE).sort("startPageNumber").findAll();
-                    break;
-            }
-
-            TOCHeader header = new TOCHeader();
-            header.setHeader(toc.getPageName());
-            if (realmResults != null) {
-                List<TOC> items = new ArrayList<>(realmResults);
-                header.setTocList(new ArrayList<>(realm.copyFromRealm(items)));
-            }
-
-            data.add(header);
+            List<TOCHeader> data = DataProvider.getDetailList(realm, toc);
             realm.close();
             return data;
         }
