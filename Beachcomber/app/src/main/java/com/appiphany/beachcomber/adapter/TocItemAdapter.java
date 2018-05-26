@@ -1,6 +1,8 @@
 package com.appiphany.beachcomber.adapter;
 
+import android.os.Build;
 import android.support.v4.content.ContextCompat;
+import android.text.Html;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -15,6 +17,7 @@ import com.bumptech.glide.Glide;
 import org.zakariya.stickyheaders.SectioningAdapter;
 
 import java.util.List;
+import java.util.Locale;
 
 @SuppressWarnings("WeakerAccess")
 public class TocItemAdapter extends SectioningAdapter {
@@ -26,8 +29,8 @@ public class TocItemAdapter extends SectioningAdapter {
     public TocItemAdapter(List<TOCHeader> data, ITocClickedListener listener) {
         this.data = data;
         this.listener = listener;
-         itemSelectedIndex = -1;
-         headerSelectedIndex = -1;
+        itemSelectedIndex = -1;
+        headerSelectedIndex = -1;
     }
 
     public int getItemSelectedIndex() {
@@ -91,13 +94,37 @@ public class TocItemAdapter extends SectioningAdapter {
         ((ItemViewHolder) viewHolder).itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(listener != null){
+                if (listener != null) {
                     listener.onItemClicked(header, item, sectionIndex, itemIndex);
                 }
             }
         });
 
-        if(getItemSelectedIndex() == itemIndex && getHeaderSelectedIndex() == sectionIndex) {
+        String title = item.getPageName();
+
+        if(item.getStartPageNumber() >= 7) {
+            if ("Leucopogon sp. Midwest".equals(title)) {
+                title = "<i>Leucopogon </i>sp. Midwest";
+            } else if ("Verticordia densiflora var. roseostella".equals(title)) {
+                title = "<i>Verticordia densiflora </i>var.<i> roseostella</i>";
+            } else {
+                String[] components = title.split("subsp.");
+                if (components.length > 1) {
+                    title = String.format(Locale.US, "<i>%s</i>subsp.<i>%s</i>", components[0], components[1]);
+                } else {
+                    title = String.format(Locale.US, "<i>%s</i>", title);
+                }
+            }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            itemViewHolder.tvTitle.setText(Html.fromHtml(title,
+                    Html.FROM_HTML_MODE_LEGACY));
+        } else {
+            itemViewHolder.tvTitle.setText(Html.fromHtml(title));
+        }
+
+        if (getItemSelectedIndex() == itemIndex && getHeaderSelectedIndex() == sectionIndex) {
             itemViewHolder.tvTitle.setBackgroundColor(ContextCompat.getColor(itemViewHolder.tvTitle.getContext(),
                     R.color.item_bg_selected));
         } else {
@@ -119,24 +146,25 @@ public class TocItemAdapter extends SectioningAdapter {
         ((HeaderViewHolder) viewHolder).itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(listener != null){
+                if (listener != null) {
                     listener.onHeaderClicked(header, sectionIndex);
                 }
             }
         });
     }
 
-    public TOCHeader getSection(int sectionIndex){
+    public TOCHeader getSection(int sectionIndex) {
         return data.get(sectionIndex);
     }
 
-    public TOC getItem(int sectionIndex, int itemIndex){
+    public TOC getItem(int sectionIndex, int itemIndex) {
         return data.get(sectionIndex).getTocList().get(itemIndex);
     }
 
     private static class ItemViewHolder extends SectioningAdapter.ItemViewHolder {
         TextView tvTitle;
         ImageView imgThumb;
+
         ItemViewHolder(View itemView) {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tvTitle);
@@ -146,6 +174,7 @@ public class TocItemAdapter extends SectioningAdapter {
 
     private static class HeaderViewHolder extends SectioningAdapter.HeaderViewHolder {
         TextView tvTitle;
+
         HeaderViewHolder(View itemView) {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tvTitle);

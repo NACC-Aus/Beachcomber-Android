@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -133,7 +134,7 @@ public class MuPDFActivity extends BaseActivity implements ReaderView.OnSingleTa
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         layout.addView(mDocView, 0);
-        layout.setBackgroundResource(R.drawable.tiled_background);
+        layout.setBackgroundColor(ContextCompat.getColor(this, R.color.pdf_bg));
         setContentView(layout);
 
         mDocView.setOnSingleTapListener(this);

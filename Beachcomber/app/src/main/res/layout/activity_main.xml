@@ -11,8 +11,7 @@
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:popupTheme="@style/Theme.AppCompat.Light.DarkActionBar">
+        app:theme="@style/ToolbarStyle">
 
         <TextView
             android:id="@+id/tvTitle"

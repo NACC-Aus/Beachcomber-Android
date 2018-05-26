@@ -28,7 +28,7 @@ android {
         versionName "1.0"
 
         ndk {
-            abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
+            abiFilters "armeabi", "armeabi-v7a"
         }
     }
 
