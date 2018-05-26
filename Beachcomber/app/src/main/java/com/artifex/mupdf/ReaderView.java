@@ -56,8 +56,9 @@ public class ReaderView extends AdapterView<Adapter>
 	private int               mScrollerLastY;
 	private boolean           mScrollDisabled;
 
-	private long lastTouchDown;
-	private static final int CLICK_ACTION_THRESHHOLD = 100;
+	private float startX;
+	private float startY;
+	private static final int CLICK_ACTION_THRESHOLD = 200;
 
 	public interface OnSingleTapListener{
 		void onSingleTap(View v, MotionEvent event);
@@ -278,10 +279,13 @@ public class ReaderView extends AdapterView<Adapter>
 
 		if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
 			mUserInteracting = true;
-			lastTouchDown = System.currentTimeMillis();
+			startX = event.getX();
+			startY = event.getY();
 		}
 		if (event.getActionMasked() == MotionEvent.ACTION_UP) {
-			if (System.currentTimeMillis() - lastTouchDown < CLICK_ACTION_THRESHHOLD) {
+			float endX = event.getX();
+			float endY = event.getY();
+			if (isAClick(startX, endX, startY, endY)) {
 				if(singleTapListener != null){
 					singleTapListener.onSingleTap(this, event);
 				}
@@ -309,6 +313,12 @@ public class ReaderView extends AdapterView<Adapter>
 
 		requestLayout();
 		return true;
+	}
+
+	private boolean isAClick(float startX, float endX, float startY, float endY) {
+		float differenceX = Math.abs(startX - endX);
+		float differenceY = Math.abs(startY - endY);
+		return !(differenceX > CLICK_ACTION_THRESHOLD/* =5 */ || differenceY > CLICK_ACTION_THRESHOLD);
 	}
 
 	@Override
