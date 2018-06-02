@@ -77,13 +77,13 @@ public class GlobalApplication extends Application {
             schema.addField(name, String.class);
         }
     }
+
     private void initFile() {
         if (Config.IS_BEACHCOMBER) {
             boolean tabletSize = getResources().getBoolean(R.bool.is_tablet);
             Config.PDF_FILE_NAME = tabletSize ? "Guide Tablet.pdf" : "Guide Phone.pdf";
         } else if (Config.IS_CHAPMAN_RIVER) {
-            boolean tabletSize = getResources().getBoolean(R.bool.is_tablet);
-            Config.PDF_FILE_NAME = tabletSize ? "CRFtablet.pdf" : "CRFmobile.pdf";
+            Config.PDF_FILE_NAME = "CRFmobile.pdf";
         } else {
             Config.PDF_FILE_NAME = "Guide.pdf";
         }
