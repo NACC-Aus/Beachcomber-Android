@@ -9,9 +9,9 @@
 
     <ImageView
         android:id="@+id/imgThumb"
-        android:layout_width="100dp"
-        android:layout_height="60dp"
-        android:scaleType="centerCrop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="center"
         tools:ignore="ContentDescription" />
 
     <TextView

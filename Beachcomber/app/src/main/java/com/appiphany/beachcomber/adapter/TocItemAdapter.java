@@ -13,6 +13,8 @@ import com.appiphany.beachcomber.models.TOC;
 import com.appiphany.beachcomber.models.TOCHeader;
 import com.appiphany.beachcomber.util.Config;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 
 import org.zakariya.stickyheaders.SectioningAdapter;
 
@@ -25,12 +27,15 @@ public class TocItemAdapter extends SectioningAdapter {
     private ITocClickedListener listener;
     private int itemSelectedIndex;
     private int headerSelectedIndex;
+    private final RequestOptions requestOptions;
 
     public TocItemAdapter(List<TOCHeader> data, ITocClickedListener listener) {
         this.data = data;
         this.listener = listener;
         itemSelectedIndex = -1;
         headerSelectedIndex = -1;
+        requestOptions = new RequestOptions()
+                .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
     }
 
     public int getItemSelectedIndex() {
@@ -89,7 +94,9 @@ public class TocItemAdapter extends SectioningAdapter {
         itemViewHolder.tvTitle.setText(item.getPageName());
 
         String imagePath = Config.THUMB_PATH + item.getThumb();
-        Glide.with(itemViewHolder.imgThumb.getContext()).load(imagePath).into(itemViewHolder.imgThumb);
+        Glide.with(itemViewHolder.imgThumb.getContext())
+                .load(imagePath)
+                .apply(requestOptions).into(itemViewHolder.imgThumb);
 
         ((ItemViewHolder) viewHolder).itemView.setOnClickListener(new View.OnClickListener() {
             @Override
